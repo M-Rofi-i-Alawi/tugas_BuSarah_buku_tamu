@@ -18,7 +18,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -31,11 +31,11 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Zie Buku Tamu</div>
+                <div class="sidebar-brand-text mx-3">Zie BukuTamu</div>
             </a>
 
             <!-- Divider -->
@@ -45,29 +45,25 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
+                    <span>Dashboard</span></a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="buku-tamu.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Buku Tamu</span>
-                </a>
+                    <span>Buku Tamu</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="laporan.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Laporan</span>
-                </a>
+                    <span>Laporan</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="user.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>User</span>
-                </a>
+                    <span>User</span></a>
             </li>
 
             <!-- Divider -->
@@ -136,7 +132,6 @@
                             </div>
                         </li>
 
-
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -174,10 +169,5 @@
 
                 </nav>
                 <!-- End of Topbar -->
-                  <!-- Custom styles for this page -->
-    <link href="assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
-
-
 </body>
 </html>
