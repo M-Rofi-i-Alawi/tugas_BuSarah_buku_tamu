@@ -68,7 +68,7 @@ include_once('templates/header.php');
                                 <td><?= $tamu['kepentingan']; ?></td>
                                 <td>
                                     <a href="edit-tamu.php?id=<?= $tamu['id_tamu']; ?>" class="btn btn-success btn-sm">Ubah</a>
-                                    <a href="hapus-tamu.php?id=<?= $tamu['id_tamu']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus data?');">Hapus</a>
+                                    <a href="hapus-tamu.php?id=<?= $tamu['id_tamu']; ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus data?');">Hapus</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
