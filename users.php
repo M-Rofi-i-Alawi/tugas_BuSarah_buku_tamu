@@ -6,22 +6,14 @@ include_once('templates/header.php');
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">Buku Tamu</h1>
+    <h1 class="h3 mb-4 text-gray-800">Buku User</h1>
     <?php
     // jika ada tombol simpan
     if (isset($_POST['simpan'])) {
-        if (tambah_tamu($_POST) > 0) {
-    ?>
-        <div class="alert alert-success" role="alert">
-            Data berhasil disimpan!
-        </div>
-    <?php
+        if (tambah_user($_POST) > 0) {
+            echo '<div class="alert alert-success">Data berhasil disimpan!</div>';
         } else {
-    ?>
-        <div class="alert alert-danger" role="alert">
-            Data gagal disimpan!
-        </div>
-    <?php
+            echo '<div class="alert alert-danger">Data gagal disimpan!</div>';
         }
     }
     ?>
@@ -50,9 +42,7 @@ include_once('templates/header.php');
                     </thead>
                     <tbody>
                         <?php
-                        // penomoran auto increment
                         $no = 1;
-                        // query untuk memanggil semua data dari tabel users
                         $users = query("SELECT * FROM users");
                         foreach ($users as $user) :
                         ?>
@@ -71,9 +61,8 @@ include_once('templates/header.php');
             </div>
         </div>
     </div>
-
 </div>
-<!-- container-fluid -->
+<!-- /.container-fluid -->
 
 <!-- Modal Tambah -->
 <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
@@ -81,56 +70,42 @@ include_once('templates/header.php');
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title" id="tambahModalLabel">Data User</h5>
+                <h5 class="modal-title" id="tambahModalLabel">Tambah User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-            <div class="modal-body">
-                <form method="post" action="">
+            <form method="post" action="">
+                <div class="modal-body">
                     <div class="form-group row">
-                        <label for="nama_tamu" class="col-sm-3 col-form-label">Nama Tamu</label>
+                        <label for="username" class="col-sm-3 col-form-label">Username</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="nama_tamu" name="nama_tamu" >
+                            <input type="text" class="form-control" id="username" name="username" required>
                         </div>
                     </div>
-
                     <div class="form-group row">
-                        <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                        <label for="password" class="col-sm-3 col-form-label">Password</label>
                         <div class="col-sm-8">
-                            <textarea class="form-control" id="alamat" name="alamat" ></textarea>
+                            <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                     </div>
-
                     <div class="form-group row">
-                        <label for="no_hp" class="col-sm-3 col-form-label">No. Telepon</label>
+                        <label for="user_role" class="col-sm-3 col-form-label">User Role</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="no_hp" name="no_hp" >
+                            <select class="form-control" id="user_role" name="user_role" required>
+                                <option value="admin">Administrator</option>
+                                <option value="operator">Operator</option>
+                            </select>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group row">
-                        <label for="bertemu" class="col-sm-3 col-form-label">Bertemu dg.</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="bertemu" name="bertemu" >
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="kepentingan" class="col-sm-3 col-form-label">Kepentingan</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="kepentingan" name="kepentingan" >
-                        </div>
-                    </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-                <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-            </div>
-
-                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+                    <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
