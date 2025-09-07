@@ -1,128 +1,211 @@
 <?php
-require('koneksi.php');
-session_start();
+require_once('function.php');
+include_once('templates/header.php');
 
-// Jika user sudah login, langsung arahkan ke index
-if (isset($_SESSION['login'])) {
-    header("Location: index.php");
-    exit();
-}
-
-if (isset($_POST['login'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    $result = mysqli_query($koneksi, "SELECT * FROM users WHERE username = '$username'");
-
-    if ($result && mysqli_num_rows($result) === 1) {
-        $row = mysqli_fetch_assoc($result);
-
-        // verifikasi password hash
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['login'] = true;
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['role'] = $row['user_role'];
-            header("Location: index.php");
-            exit();
-        }
-    }
-
-    // jika gagal login
-    $error = true;
+if($_SESSION['role'] != 'admin'){
+  echo "<script>
+          alert('Anda tidak memiliki akses ke halaman ini!');
+          window.location.href = 'index.php';
+        </script>";
+  exit;
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php
+if(isset($_SESSION['role']) && $_SESSION['role'] == 'admin'):
+?>
+<ul>
+  <li>
+    <a href="users.php" class="nav-link">
+      <i class="fas fa-fw fa-users"></i>
+      <span>User</span>
+    </a>
+  </li>
+</ul>
+<?php
+  endif;
+?>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <title>Login - Aplikasi Buku Tamu</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
-</head>
-
-<body class="bg-gradient-primary">
-
-    <div class="container">
-
-        <!-- Notifikasi error -->
-        <?php if (!empty($error)) : ?>
-            <div class="alert alert-danger mt-3" role="alert">
-                Username atau Password salah!
-            </div>
-        <?php endif; ?>
-
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-
-            <div class="col-xl-10 col-lg-12 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image">
-                                <div class="d-flex justify-content-center align-items-center h-100">
-                                    <img src="assets/img/login-page.jpg" alt="Login Image"
-                                        class="img-fluid rounded-start" style="width: 90%; height: auto;">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Selamat Datang!</h1>
-                                    </div>
-                                    <form class="user" method="post" action="">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" 
-                                                id="username" name="username" placeholder="Masukkan Username" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" 
-                                                id="password" name="password" placeholder="Masukkan Password" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block" name="login">
-                                            Login
-                                        </button>
-                                    </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Lupa Password?</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a class="small" href="register.html">Buat Akun Baru!</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
+<!-- Begin Page Content -->
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <h1 class="h3 mb-4 text-gray-800">Data User</h1>
+  <?php
+    if(isset($_POST['simpan'])){
+      if(tambah_user($_POST) > 0){
+  ?>
+  <div class="alert alert-success" role="alert">
+    Data berhasil disimpan!
+  </div>
+  <?php
+      } else {
+  ?>
+  <div class="alert alert-danger" role="alert">
+    Data gagal disimpan!
+  </div>
+  <?php
+      }
+    } else if (isset($_POST['ganti_password'])){
+        if(ganti_password($_POST) > 0){
+  ?>
+  <div class="alert alert-success" role="alert">
+    Password berhasil diubah!
+  </div>
+  <?php
+      } else {
+  ?>
+  <div class="alert alert-danger" role="alert">
+    Password gagal diubah!
+  </div>
+  <?php
+      }
+    }
+  ?>
+</div>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <button type="button" class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#tambahModal">
+      <span class="icon text-while-50">
+        <i class="fas fa-plus"></i>
+      </span>
+      <span class="text">Data User</span>
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th class="text-center">Username</th>
+            <th class="text-center">User Role</th>
+            <th colspan="3" class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th class="text-center">No</th>
+            <th class="text-center">Username</th>
+            <th class="text-center">User Role</th>
+            <th colspan="3" class="text-center">Aksi</th>
+          </tr>
+        </tfoot>
+        <tbody>
+          <?php
+            $no = 1;
+            $users = query("SELECT * FROM users");
+            foreach($users as $user) : 
+          ?>
+          <tr>
+            <td class="text-center"><?= $no++?></td>
+            <td class="text-center"><?= $user['username']?></td>
+            <td class="text-center"><?= $user['user_role']?></td>
+            <td class="text-center">
+              <button type="button" class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#gantiPassword" data-id="<?= $user['id_user']?>">
+                <span class="text">Ganti Password</span>
+              </button>
+            </td>
+            <td class="text-center">
+              <a class="btn btn-success" href="edit-user.php?id=<?= $user['id_user']?>">Ubah</a>
+            </td>
+            <td class="text-center">
+              <a href="hapus-user.php?id=<?= $user['id_user']?>" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" class="btn btn-danger">Hapus</a>
+            </td>
+          </tr>
+          <?php endforeach?>
+        </tbody>
+      </table>
     </div>
+  </div>
+</div>
+<!-- Membuat id otomatis -->
+<?php
+// mengambil data barang dari tabel dengan kode terbesar
+$query = mysqli_query($koneksi, "SELECT max(id_user) as kodeTerbesar FROM users");
+$data = mysqli_fetch_array($query);
+$kodeuser = $data['kodeTerbesar'];
+// mengambil angka dari kode barang terbesar, menggunakan fungsi substr dan diubah ke integer dengan (int)
+$urutan = (int) substr($kodeuser, 3, 2);
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="assets/vendor/jquery/jquery.min.js"></script>
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+//nomor yang diambil akan ditambah 1 untuk menentukan nomor urut berikutnya
+$urutan++;
 
-    <!-- Core plugin JavaScript-->
-    <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+//membuat kode barang baru
+$huruf = "USR";
+$kodeuser = $huruf . sprintf("%02s", $urutan);
+?>
 
-    <!-- Custom scripts for all pages-->
-    <script src="assets/js/sb-admin-2.min.js"></script>
+<!-- Modal Ganti Password -->
+<div class="modal fade" id="gantiPassword" tabindex="-1" aria-labelledby="gantiPasswordLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gantiPasswordLabel">Ganti Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="">
+          <input type="hidden" name="id_user" id="id_user">
+          <div class="form-group row">
+            <label for="password" class="col-sm-4 col-torn-label">Password Baru</label>
+            <div class="col-sm-7">
+              <input type="password" class="form-control" id="password" name="password">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+        <button type="submit" name="ganti_password" class="btn btn-primary">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-</body>
-
-</html>
+<!-- Modal -->
+<div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+                <h5 class="modal-title fs-5" id="tambahModalLabel">Tambah Tamu</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+          <input type="hidden" name="id_user" id="id_user" value="<?= $kodeuser?>">
+          <div class="form-group row">
+            <label for="nama_user" class="col-sm-3 col-form-label">Username</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="username" name="username">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="nama_user" class="col-sm-3 col-form-label">Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control" id="password" name="password">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="nama_user" class="col-sm-3 col-form-label">User Role</label>
+            <div class="col-sm-8">
+              <select name="user_role" id="user_role" class="form-control">
+                <option value="admin">Administrator</option>
+                <option value="operator">Operator</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.container-fluid -->
+<?php include('templates/footer.php')?>

@@ -1,7 +1,18 @@
 <?php
 require_once('function.php');
 include_once('templates/header.php');
+session_start();
+
+// cek role user
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'operator') {
+  echo "<script>
+          alert('Anda tidak memiliki akses ke halaman ini!');
+          window.location.href = 'index.php';
+        </script>";
+  exit;
+}
 ?>
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
