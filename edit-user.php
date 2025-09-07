@@ -67,7 +67,12 @@ if (isset($_POST['simpan'])) {
                             </span>
                             <span class="text">Kembali</span>
                         </a>
-                        <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><a href="users.php"
+                                    class="btn btn-secondary">Keluar</a></button>
+                            <button type="submit" name="simpan" class="btn btn-primary"><a
+                                    class="btn btn-primary" >Simpan</a></button>
+                        </div>
                     </div>
                 </div>
             </form>
