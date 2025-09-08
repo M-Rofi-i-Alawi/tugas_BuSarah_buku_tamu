@@ -1,127 +1,122 @@
 <?php
-// panngil file koneksi.php
 require_once('koneksi.php');
-?>
 
-
-<?php
-// membuat query ke / dari database
-function query($query){
-    global $koneksi;
-    $result = mysqli_query($koneksi,$query);
-    $rows = [];
-    while ($row = mysqli_fetch_assoc($result)){
-        $rows[] = $row;
-    }
-    return $rows;
+function query($query) {
+  global $koneksi;
+  $result = mysqli_query($koneksi, $query);
+  $rows = [];
+  while ($row = mysqli_fetch_assoc($result)){
+    $rows[] = $row;
+  }
+  return $rows;
 }
 
-
-// function tambah data
-function tambah_tamu($data)
-{
+// Awal fungsi tamu
+function tambah_tamu($data) {
     global $koneksi;
-
-    $kode           = htmlspecialchars($data["id_tamu"]);
-    $tanggal        = date("Y-m-d");
-    $nama_tamu      = htmlspecialchars($data["nama_tamu"]);
-    $alamat         = htmlspecialchars($data["alamat"]);
-    $no_hp          = htmlspecialchars($data["no_hp"]);
-    $bertemu        = htmlspecialchars($data["bertemu"]);
-    $kepentingan    = htmlspecialchars($data["kepentingan"]);
+    
+    $kode = htmlspecialchars($data["id_tamu"]);
+    $tanggal = date("Y-m-d");
+    $nama_tamu = htmlspecialchars($data["nama_tamu"]);
+    $alamat = htmlspecialchars($data["alamat"]);
+    $no_hp = htmlspecialchars($data["no_hp"]);
+    $bertemu = htmlspecialchars($data["bertemu"]);
+    $kepentingan = htmlspecialchars($data["kepentingan"]);
 
     // upload gambar
     $gambar = uploadGambar();
-    if(!$gambar){
+    if(!$gambar) {
         return false;
     }
 
-    $query = "INSERT INTO buku_tamu VALUES ('$kode','$tanggal','$nama_tamu','$alamat','$no_hp',
-                '$bertemu','$kepentingan')";
+    $query = "INSERT INTO buku_tamu (tanggal, nama_tamu, alamat, no_hp, bertemu, kepentingan, gambar)
+          VALUES ('$tanggal','$nama_tamu','$alamat','$no_hp','$bertemu','$kepentingan','$gambar')";
 
     mysqli_query($koneksi, $query);
-
+    
     return mysqli_affected_rows($koneksi);
 }
-// function ubah data tamu
-function ubah_tamu($data)
-{
+
+function ubah_tamu($data){
     global $koneksi;
+    $id = htmlspecialchars($data['id_tamu']);
+    $nama_tamu = htmlspecialchars($data['nama_tamu']);
+    $alamat = htmlspecialchars($data['alamat']);
+    $no_hp = htmlspecialchars($data['no_hp']);
+    $bertemu = htmlspecialchars($data['bertemu']);
+    $kepentingan = htmlspecialchars($data['kepentingan']);
+    $gambarLama = htmlspecialchars($data['gambarLama']);
 
-    $kode        = htmlspecialchars($data["id_tamu"]);
-    $nama_tamu   = htmlspecialchars($data["nama_tamu"]);
-    $alamat      = htmlspecialchars($data["alamat"]);
-    $no_hp       = htmlspecialchars($data["no_hp"]);
-    $bertemu     = htmlspecialchars($data["bertemu"]);
-    $kepentingan = htmlspecialchars($data["kepentingan"]);
+    // cek apakah user pilih gambar baru atau tidak
+    if($_FILES['gambar']['error'] === 4) {
+        $gambar = $gambarLama;
+    } else {
+        $gambar = uploadGambar();
+    }
 
-    $query = "UPDATE buku_tamu SET 
+    $query = "UPDATE buku_tamu SET
                 nama_tamu = '$nama_tamu',
                 alamat = '$alamat',
                 no_hp = '$no_hp',
                 bertemu = '$bertemu',
-                kepentingan = '$kepentingan'
-              WHERE id_tamu = '$kode'";
-
+                kepentingan = '$kepentingan',
+                gambar = '$gambar'
+                WHERE id_tamu = '$id'";
     mysqli_query($koneksi, $query);
-
+    
     return mysqli_affected_rows($koneksi);
 }
-// function hapus data
-function hapus_tamu($id){
+
+function hapus_tamu($id) {
     global $koneksi;
-    $query= "DELETE FROM buku_tamu WHERE id_tamu = '$id'";
-
-    mysqli_query($koneksi,$query);
+    $query = "DELETE FROM buku_tamu WHERE id_tamu = '$id'";
+    mysqli_query($koneksi, $query);
     return mysqli_affected_rows($koneksi);
 }
-// function tambah user
+// Akhir fungsi tamu
+
+
+// Awal fungsi user
 function tambah_user($data) {
     global $koneksi;
 
-    // Ambil data dari form
+    $kode = htmlspecialchars($data["id_user"]);
     $username = htmlspecialchars($data["username"]);
     $password = htmlspecialchars($data["password"]);
     $user_role = htmlspecialchars($data["user_role"]);
 
-    // Enkripsi password
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert ke tabel users (tanpa id_user, karena auto_increment)
-    $query = "INSERT INTO users (username, password, user_role) 
-              VALUES ('$username', '$password_hash', '$user_role')";
+    $query = "INSERT INTO users (username, password, user_role)
+          VALUES ('$username', '$password_hash', '$user_role')";
 
     mysqli_query($koneksi, $query);
-
     return mysqli_affected_rows($koneksi);
 }
-// function ubah user
-function ubah_user($data)
-{
+
+function ubah_user($data){
     global $koneksi;
+    $kode = htmlspecialchars($data['id_user']);
+    $username = htmlspecialchars($data['username']);
+    $user_role = htmlspecialchars($data['user_role']);
 
-    $kode      = htmlspecialchars($data["id_user"]);
-    $username  = htmlspecialchars($data["username"]);
-    $user_role = htmlspecialchars($data["user_role"]);
-
-    $query = "UPDATE users SET 
+    $query = "UPDATE users SET
                 username = '$username',
                 user_role = '$user_role'
-              WHERE id_user = '$kode'";
-
+                WHERE id_user = '$kode'";
     mysqli_query($koneksi, $query);
-
+    
     return mysqli_affected_rows($koneksi);
 }
-// function hapus data user
-function hapus_user($id){
+
+function hapus_user($id) {
     global $koneksi;
-    $query= "DELETE FROM users WHERE id_user = '$id'";
-
-    mysqli_query($koneksi,$query);
+    $query = "DELETE FROM users WHERE id_user = '$id'";
+    mysqli_query($koneksi, $query);
     return mysqli_affected_rows($koneksi);
 }
-// function ganti password
+
+// fungsi ganti password
 function ganti_password($data){
     global $koneksi;
     $kode = htmlspecialchars($data['id_user']);
@@ -135,6 +130,8 @@ function ganti_password($data){
     
     return mysqli_affected_rows($koneksi);
 }
+
+// fungsi upload gambar
 function uploadGambar() {
     $namaFile = $_FILES['gambar']['name'];
     $ukuranFile = $_FILES['gambar']['size'];
@@ -178,7 +175,5 @@ function uploadGambar() {
 
     return $namaFileBaru;
 }
+
 ?>
-
-
-

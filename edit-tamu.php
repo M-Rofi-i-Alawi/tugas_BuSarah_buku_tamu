@@ -1,7 +1,7 @@
 
 <?php
 include_once('templates/header.php');
-require_once('connection.php');
+require_once('koneksi.php');
 require_once('function.php');
 ?>
 
@@ -93,14 +93,14 @@ require_once('function.php');
                     <label for="gambar" class="col-sm-3 col-form-label">Gambar Foto</label>
                     <div class="col-sm-8">
                         <img src="assets/upload_gambar/<?= $data['gambar']?>" alt="" width="20%">
-                        <input type="file" class="form-control" id="gambar" value="<?= $data['gambar'] ?>"
-                            name="gambar">
+                        <input type="file" class="form-control" id="gambar" name="gambar">
                     </div>
                 </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><a href="buku-tamu.php"class="btn btn-secondary">Keluar</a></button>
-            <button type="submit" name="simpan" class="btn btn-primary"><a class="btn btn-primary">Simpan</a></button>
+            <a href="buku-tamu.php" class="btn btn-secondary">Keluar</a>
+            <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+
         </div>
         </form>
     </div>
