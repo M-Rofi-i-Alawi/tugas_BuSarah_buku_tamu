@@ -85,32 +85,27 @@ if(isset($_POST['tampilkan'])) {
           </thead>
           <tbody>
             <?php
-              if(isset($_POST['tampilkan'])) {
-                $p_awal = $_POST['p_awal'];
-                $p_akhir = $_POST['p_akhir'];
-                $no = 1;
-                $buku_tamu = query("SELECT * FROM buku_tamu WHERE tanggal BETWEEN '$p_awal' AND '$p_akhir' ");
-                foreach($buku_tamu as $tamu) :
+            // penomoran auto-increment
+            $no = 1;
+
+            foreach ($buku_tamu as $tamu) : ?>
+                <tr>
+                    <td><?= $no++; ?></td>
+                    <td><?= $tamu['tanggal'] ?></td>
+                    <td><?= $tamu['nama_tamu'] ?></td>
+                    <td><?= $tamu['alamat'] ?></td>
+                    <td><?= $tamu['no_hp'] ?></td>
+                    <td><?= $tamu['bertemu'] ?></td>
+                    <td><?= $tamu['kepentingan'] ?></td>
+                    <td>
+                        <a class="btn btn-success" href="edit-tamu.php?id=<?= $tamu['id_tamu'] ?>">Ubah</a>
+                        <a onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" class="btn btn-danger" href="hapus-tamu.php?id=<?= $tamu['id_tamu'] ?>">Hapus</a>
+                    </td>
+                </tr>
+            <?php endforeach; 
             ?>
-            <tr>
-              <td class="text-center"><?= $no++; ?></td>
-              <td class="text-center"><?= $tamu['tanggal']?></td>
-              <td class="text-center"><?= $tamu['nama_tamu']?></td>
-              <td><?= $tamu['alamat']?></td>
-              <td class="text-center"><?= $tamu['no_hp']?></td>
-              <td class="text-center"><?= $tamu['bertemu']?></td>
-              <td><?= $tamu['kepentingan']?></td>
-              <td class="text-center">
-                <a class="btn btn-success" href="edit-tamu.php?id=<?= $tamu['id_tamu']?>">Ubah</a>
-              </td>
-              <td class="text-center">
-                <a class="btn btn-danger" href="hapus-tamu.php?id=<?= $tamu['id_tamu']?>" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">Hapus</a>
-              </td>
-            </tr>
-            <?php endforeach;
-              }
-            ?>
-          </tbody>
+        </tbody>
+
         </table>
       </div>
     </div>
