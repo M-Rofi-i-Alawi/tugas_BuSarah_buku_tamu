@@ -96,7 +96,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'operator') {
             </div>
 
             <div class="modal-body">
-                <form method="post" action="">
+                <form method="post" action="" enctype="multipart/form-data">
                     <div class="form-group row">
                         <label for="nama_tamu" class="col-sm-3 col-form-label">Nama Tamu</label>
                         <div class="col-sm-8">
@@ -129,6 +129,14 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'operator') {
                         <label for="kepentingan" class="col-sm-3 col-form-label">Kepentingan</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="kepentingan" name="kepentingan">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="gambar" class="col-sm-3 col-form-label">Unggah Foto</label>
+                        <div class="custom-file col-sm-8">
+                            <input type="file" class="custom-file-input" id="gambar" name="gambar">
+                            <label for="gambar" class="custom-file-label">Chosse file</label>
                         </div>
                     </div>
             </div>
